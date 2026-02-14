@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unlock My Heart 💖</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #ff4da6, #ff1a75);
+  color: white;
+}
+
+.heart {
+  position: fixed;
+  bottom: -50px;
+  font-size: 20px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.8;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+}
+
+#home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-container {
+  cursor: pointer;
+  transition: 0.4s;
+}
+.profile-container:hover { transform: scale(1.08); }
+
+.profile-pic {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 0 30px rgba(255,255,255,0.6);
+}
+
+.click-text { margin-top: 15px; font-size: 18px; }
+
+#main { display: none; padding: 40px 20px; text-align: center; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  width: 90%;
+  max-width: 1100px;
+  margin: 40px auto;
+}
+
+.celebrate-heart {
+  position: fixed;
+  font-size: 25px;
+  animation: flyUp 2s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes flyUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-200px) scale(1.8); opacity: 0; }
+}
+
+.no-text {
+  color: rgb(103, 43, 146);
+  font-weight: bold;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.box {
+  background: linear-gradient(145deg, #ff99c8, #ff4da6);
+  border-radius: 20px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  cursor: pointer;
+  transition: 0.4s;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.box::before { content: "💌"; }
+
+.box:hover { transform: scale(1.05); }
+
+.unlocked {
+  background: white;
+  color: #ff1a75;
+}
+
+#modal {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #ff4da6, #ff1a75);
+  color: white;
+  padding: 30px;
+  border-radius: 25px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content input {
+  border-radius: 20px;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.modal-content button {
+  margin-top: 15px;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 20px;
+  background: white;
+  color: #ff1a75;
+  cursor: pointer;
+}
+
+.memory-card {
+  margin-top: 20px;
+  background: white;
+  color: #ff1a75;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: slideUp 0.5s ease;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.memory-card img,
+.memory-card video {
+  width: 100%;
+  border-radius: 15px;
+  margin-top: 10px;
+}
+
+#finalBtn {
+  margin-top: 40px;
+  padding: 15px 40px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  background: gray;
+  color: white;
+  cursor: not-allowed;
+}
+
+#finalBtn.enabled {
+  background: linear-gradient(135deg, #ff4da6, #ff1a75);
+  cursor: pointer;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px #ff4da6; }
+  to { box-shadow: 0 0 25px #ff1a75; }
+}
+
+#surpriseBox { display:none; margin-top:20px; }
+
+@media(max-width:768px){
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:500px){
+  .grid { grid-template-columns: 1fr; }
+  .profile-pic { width:170px; height:170px; }
+}
+
+.confetti {
+  position: fixed;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(300px) rotate(720deg); opacity: 0; }
+}
+
+.knife {
+  position: fixed;
+  font-size: 40px;
+  animation: knifeDrop 1.5s ease-out forwards;
+}
+
+@keyframes knifeDrop {
+  0% { transform: translateY(-200px); opacity: 1; }
+  100% { transform: translateY(200px); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<script>
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerText = "💘";
+  heart.style.left = Math.random()*100 + "vw";
+  heart.style.fontSize = (Math.random()*20+15)+"px";
+  heart.style.animationDuration = (Math.random()*3+3)+"s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+}
+let heartInterval = setInterval(createHeart,500);
+</script>
+
+<div id="home">
+  <h1>Happy Valentine's Day My Chapathiiii 💖</h1>
+  <div class="profile-container" onclick="startGame()">
+    <img src="button2.jpeg" class="profile-pic">
+    <p class="click-text">click on us… i have something special for you 😘</p>
+  </div>
+</div>
+
+<div id="main">
+  <h2>Answer each letter to unlock final surprise 💕</h2>
+
+  <div class="grid">
+    <div class="box" onclick="openBox(0)"></div>
+    <div class="box" onclick="openBox(1)"></div>
+    <div class="box" onclick="openBox(2)"></div>
+    <div class="box" onclick="openBox(3)"></div>
+    <div class="box" onclick="openBox(4)"></div>
+    <div class="box" onclick="openBox(5)"></div>
+  </div>
+
+  <button id="finalBtn" onclick="showSurprise()" disabled>
+    💖 Open Final Surprise 💖
+  </button>
+
+  <div id="surpriseBox">
+    <h2>You unlocked everything 💕</h2>
+    <audio controls>
+      <source src="surprise.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+</div>
+
+<div id="modal">
+  <div class="modal-content">
+    <h3 id="question"></h3>
+    <input type="text" id="answerInput">
+    <button onclick="submitAnswer()">Submit 💌</button>
+    <div id="memoryContent"></div>
+    <button id="backBtn" onclick="closeModal()" style="display:none; margin-top:15px; padding:8px 18px; border-radius:20px; border:none; background:#ff1a75; color:white; cursor:pointer;">
+      Back to Letters 💌
+    </button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script>
+emailjs.init("8qfnoIlFlkJx-sd1Y");
+
+let currentBox = null;
+let unlockedCount = 0;
+let answeredBoxes = new Array(6).fill(false);
+
+const questions = [
+ "What is your favorite memory of us together? 📸",
+ "What is one small thing I do that you secretly love? 🥰",
+ "If I was a song, what kind of song would I be? 🎶",
+ "What kind of future do you imagine with me? 🌟",
+ "Why do you choose me? 💌",
+ "What is something you’ve never told me but feel? 💭"
+];
+
+const images = [
+  "image1.jpeg","image2.jpeg","image3.jpeg",
+  "image4.jpeg","image5.jpeg","image6.mp4"
+];
+
+const messages = [
+  "still i cant forget our first meet theriyuma,i met the love of my life in person.And it's our third valentines day together hehe😛😛 innum 100 valentines day vandhalum enkooda dha maatikitta panguu 💖",
+  "Actually i secretly love when u show me every little things like nee yedhachu vaanguna or yedhachu pudhu places paatha kutty bomma vaanguna kooda u'll show me idhu vandhu naa romba admire pannuva that shows me how much u value me🥰",
+  "Every memory with you feels warm , you are my safe space 😘😘😘😘 MY HOMEEE MY WORLD MY EVERYTHING💖💖💖🌍🌍🌍🌍",
+  "Nee thoongum bodhu i'll always admire you i'll recollect all our memories together and yevolo lucky to u have u in my lifeee💖💖🌍🌍",
+  "I MISS YOU EVERY SINGLE SECOND WHENEVER I SEE SOME COUPLE I MISS US💖💖💖🥲 I'll be your NEELOTHI🌍🌍💖 I'll wait for you till u achieve all you dreams😘😘😘😘😘😘I'm rooting for your success and u will always be in my prayerss💖💖💖💖",
+  "naa mood out la irundha appo nee seri panna nee dance aaduna naa adikadi indha video paapan hehe😘😘😘😘nee semma cute theriyuma therinchiko😛💖💖💖"
+];
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("backBtn").style.display = "none";
+}
+
+function startGame(){
+  document.getElementById("home").style.display="none";
+  document.getElementById("main").style.display="block";
+}
+
+function openBox(index){
+  if(answeredBoxes[index]) return;
+  currentBox=index;
+  document.getElementById("modal").style.display="flex";
+  document.getElementById("question").innerText=questions[index];
+  document.getElementById("answerInput").value="";
+  document.getElementById("memoryContent").innerHTML="";
+}
+
+function submitAnswer(){
+  let answer=document.getElementById("answerInput").value.trim();
+  if(answer==="") return;
+
+  emailjs.send("service_6vc30as","template_0o5jnsh",{
+    box_number: currentBox+1,
+    question: questions[currentBox],
+    answer: answer
+  });
+
+  answeredBoxes[currentBox]=true;
+  unlockBox();
+}
+
+function unlockBox(){
+  let box=document.getElementsByClassName("box")[currentBox];
+  box.classList.add("unlocked");
+
+  let media;
+
+  if(images[currentBox].endsWith(".mp4")){
+    media = `<video controls autoplay muted playsinline style="width:100%; border-radius:15px; margin-top:10px;">
+                <source src="${images[currentBox]}" type="video/mp4">
+             </video>`;
+  } else {
+    media = `<img src="${images[currentBox]}" style="width:100%; border-radius:15px; margin-top:10px;">`;
+  }
+
+  document.getElementById("memoryContent").innerHTML =
+    `<div class="memory-card">
+        <h3>💌 Opened Letter</h3>
+        ${media}
+        <p>${messages[currentBox]}</p>
+     </div>`;
+
+  document.getElementById("backBtn").style.display = "inline-block";
+
+  unlockedCount++;
+
+  if(unlockedCount===6){
+    let btn=document.getElementById("finalBtn");
+    btn.disabled=false;
+    btn.classList.add("enabled");
+  }
+}
+
+function showSurprise(){
+  if(unlockedCount===6){
+    document.getElementById("modal").style.display="flex";
+
+    document.querySelector(".modal-content").innerHTML = `
+      <h2>💖 My Special Surprise 💖</h2>
+      <p>You are my forever person 💕</p>
+      <audio id="finalAudio" controls autoplay style="width:100%; margin-top:15px;">
+        <source src="surprise.mp3" type="audio/mp3">
+      </audio>
+      <button id="valentineBtn"
+        style="display:none; margin-top:20px; padding:12px 25px; border-radius:25px; border:none; background:white; color:#ff1a75; font-size:16px; cursor:pointer;">
+        Click Here thangoooo💌 
+      </button>
+    `;
+
+    document.getElementById("finalAudio").onended = function(){
+      document.getElementById("valentineBtn").style.display = "inline-block";
+    };
+
+    document.getElementById("valentineBtn").onclick = function(){
+      showValentineCard();
+    };
+  }
+}
+
+function showValentineCard(){
+  clearInterval(heartInterval);
+
+  document.querySelector(".modal-content").innerHTML = `
+    <h2>💌 Will You Be My Valentine? 💖</h2>
+
+    <button onclick="yesAnswer()" 
+      style="margin:10px; padding:12px 25px; border-radius:25px; border:none; background:#ff1a75; color:white; cursor:pointer;">
+      Yes 💕
+    </button>
+
+    <button onclick="noAnswer()" 
+      style="margin:10px; padding:12px 25px; border-radius:25px; border:none; background:gray; color:white; cursor:pointer;">
+      No 🙈
+    </button>
+
+    <div id="valentineResult"></div>
+  `;
+}
+
+function yesAnswer(){
+  document.getElementById("valentineResult").innerHTML = `
+    <h3 style="margin-top:20px;">YAYYYYYY MY VALENTINE 💖💖💖</h3>
+    <img src="yes-photo.jpeg" style="width:100%; border-radius:20px; margin-top:15px;">
+  `;
+
+  let colors = ["#ff4da6","#ff99c8","#ffd700","#00ffff","#ffffff","#ff0000","#00ff00","#0000ff"];
+
+  for(let i=0; i<150; i++){
+    let confetti = document.createElement("div");
+    confetti.className = "confetti";
+    confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
+    confetti.style.left = Math.random() * window.innerWidth + "px";
+    confetti.style.top = Math.random() * window.innerHeight + "px";
+    confetti.style.width = Math.random()*8 + 6 + "px";
+    confetti.style.height = confetti.style.width;
+    confetti.style.animationDuration = (Math.random()*1.5 + 1.5) + "s";
+    document.body.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),3000);
+  }
+}
+
+function noAnswer(){
+  document.getElementById("valentineResult").innerHTML = `
+    <h3 class="no-text">Please please think again 🥺</h3>
+    <img src="no-photo.jpeg" style="width:100%; border-radius:20px; margin-top:15px;">
+  `;
+
+  let knife = document.createElement("div");
+  knife.className = "knife";
+  knife.innerText = "🔪";
+  knife.style.left = "50%";
+  knife.style.top = "0";
+  document.body.appendChild(knife);
+  setTimeout(()=>knife.remove(),1500);
+}
+</script>
+
+</body>
+</html>
